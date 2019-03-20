@@ -19,6 +19,7 @@ namespace HospitalManagementSystem.UI.Login.UI
     public partial class FormMain : MetroFramework.Forms.MetroForm
     {
         Timer t = new Timer();
+        private hmsDataContext DBcon = new hmsDataContext();
         public FormMain()
         {
             InitializeComponent();
@@ -33,68 +34,47 @@ namespace HospitalManagementSystem.UI.Login.UI
 
         private void metroTextButtonLogin_Click(object sender, EventArgs e)
         {
+            Login_ log = new Login_();
             try
             {
-                hmsDataContext DBcon = new hmsDataContext();
-                Login_ log = new Login_();
                 log = DBcon.Login_s.SingleOrDefault(x => x.LoginUserName == metroTextBox1.Text && x.LoginPassword == metroTextBox2.Text);
-
-                if (log.Profile == "ADMIN" && log.LoginUserName == "admin" && metroTextBox1.Text == log.LoginUserName && metroTextBox2.Text == log.LoginPassword)
+                if (log != null)
                 {
-                    user = metroTextBox1.Text;
-                    FormMain.ActiveForm.Hide();
-                    new FormAdmin().Show();
+                    user = log.LoginUserName;
+                    this.Hide();
                     metroTextBox1.Clear();
                     metroTextBox2.Clear();
-                }
-                if (log.Profile != "ADMIN")
-                {
-                    if (log.Profile == "DOCTOR" && metroTextBox1.Text == log.LoginUserName && metroTextBox2.Text == log.LoginPassword)
+                    var profile = log.Profile.ToString();
+                    if(profile == "ADMIN")
                     {
-                        user = metroTextBox1.Text;
-                        FormMain.ActiveForm.Hide();
-                        new FormDoctor().Show();
-                        metroTextBox1.Clear();
-                        metroTextBox2.Clear();
-                    }
-                }
-                if (log.Profile != "ADMIN" && log.Profile != "DOCTOR")
-                {
-                    if (log.Profile == "ACCOUNTANT" && metroTextBox1.Text == log.LoginUserName && metroTextBox2.Text == log.LoginPassword)
+                        var adminForm = new FormAdmin();
+                        adminForm.Show();
+                    } else if(profile =="DOCTOR")
                     {
-                        user = metroTextBox1.Text;
-                        FormMain.ActiveForm.Hide();
-                        new FormAccountant().Show();
-                        metroTextBox1.Clear();
-                        metroTextBox2.Clear();
-                    }
-                }
-                if (log.Profile != "ADMIN" && log.Profile != "DOCTOR" && log.Profile != "ACCOUNTANT")
-                {
-                    if (log.Profile == "RECEPTIONIST" && metroTextBox1.Text == log.LoginUserName && metroTextBox2.Text == log.LoginPassword)
+                        var doctorForm = new FormDoctor();
+                        doctorForm.Show();
+                    } else if(profile== "ACCOUNTANT")
                     {
-                        user = metroTextBox1.Text;
-                        FormMain.ActiveForm.Hide();
-                        new FormReceptionist().Show();
-                        metroTextBox1.Clear();
-                        metroTextBox2.Clear();
-                        
+                        var accform = new FormAccountant();
+                        accform.Show();
+                    } else if(profile == "RECEPTIONIST")
+                    {
+                        var recform = new FormReceptionist();
+                        recform.Show();
                     }
+                } else
+                {
+                    MetroMessageBox.Show(this, "Incorrect Login Details", "Login Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
                 }
                 
             }
             catch (Exception ex)
             {
-                MetroMessageBox.Show(this, "Incorrect Username or Password", "Halt!!!", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-                metroTextBox1.Clear();
-                metroTextBox2.Clear();
+                MetroMessageBox.Show(this, ex.Message, "Critical Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+               
             }
         }
 
-        private void metroTile2_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
@@ -109,11 +89,6 @@ namespace HospitalManagementSystem.UI.Login.UI
             string date = DateTime.Now.ToString("dd:MM:yyyy");
             metroTile1.Text = clock;
             metroTile2.Text = date;
-        }
-
-        private void metroPanelLoginBody_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void metroTile3_Click(object sender, EventArgs e)

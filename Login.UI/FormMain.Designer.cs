@@ -62,7 +62,7 @@
             this.metroPanelLoginBody.VerticalScrollbarBarColor = true;
             this.metroPanelLoginBody.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanelLoginBody.VerticalScrollbarSize = 10;
-            this.metroPanelLoginBody.Paint += new System.Windows.Forms.PaintEventHandler(this.metroPanelLoginBody_Paint);
+          
             // 
             // metroTextBox2
             // 
@@ -231,7 +231,7 @@
             this.metroTile2.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Bold;
             this.metroTile2.UseCustomForeColor = true;
             this.metroTile2.UseSelectable = true;
-            this.metroTile2.Click += new System.EventHandler(this.metroTile2_Click);
+            
             // 
             // metroTile3
             // 
